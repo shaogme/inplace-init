@@ -1,0 +1,44 @@
+---
+title: inplace-init
+description: Build Rust values directly in their final storage, with movable and pinned initialization.
+template: splash
+hero:
+  tagline: Initialize in place. Pin only when the address matters.
+  actions:
+    - text: Get started
+      link: /inplace-init/guide/getting-started/
+      icon: right-arrow
+    - text: Understand the model
+      link: /inplace-init/concepts/initialization-model/
+      variant: minimal
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+`inplace-init` is a `no_std`-friendly Rust library for constructing a value in caller-provided storage. Initializers can write a complete value or build a struct one field at a time. A receipt keeps exclusive access to the result and is responsible for dropping it.
+
+Use the movable APIs for ordinary values. Use the pinned APIs when construction needs the value's final address, such as for a self-referential type. The derive and initializer macros generate the field projection and type-state plumbing.
+
+<CardGrid stagger>
+	<Card title="Start with a working example" icon="rocket">
+		Follow the [getting started guide](/inplace-init/guide/getting-started/) to initialize a struct with `init!` and `init_in`.
+	</Card>
+	<Card title="Build with a derive" icon="pencil">
+		Use [`#[derive(Init)]`](/inplace-init/guides/derive-builder/) for a type-state builder and per-field defaults.
+	</Card>
+	<Card title="Keep an address stable" icon="setting">
+		Learn when to use [`pin_init!` and `pin_init_local!`](/inplace-init/guides/pinning/) and how `#[pin]` fields are checked.
+	</Card>
+	<Card title="Look up an API" icon="open-book">
+		Browse the [macro syntax](/inplace-init/reference/macros/) and [runtime API](/inplace-init/reference/api/).
+	</Card>
+</CardGrid>
+
+## What this library guarantees
+
+- `InitSlot` represents one exclusive, uninitialized destination.
+- Successful initialization returns an `InitReceipt` that owns the value's destruction responsibility.
+- Generated struct initializers project fields into the final destination and clean up already initialized fields if a later field fails.
+- Pinned initialization uses a separate mode and receipt API so a value can be built at its final address and accessed through `Pin`.
+
+The default feature set is `no_std` and does not enable allocation. Enable `alloc` for boxed initialization and allocation-backed collection defaults; enable `std` for `HashMap` and `HashSet` defaults.

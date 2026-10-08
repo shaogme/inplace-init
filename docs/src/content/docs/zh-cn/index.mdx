@@ -1,0 +1,44 @@
+---
+title: inplace-init
+description: 在 Rust 值的最终存储位置直接构造，并支持普通与固定地址初始化。
+template: splash
+hero:
+  tagline: 原位构造；只有地址重要时才固定。
+  actions:
+    - text: 快速入门
+      link: /inplace-init/zh-cn/guide/getting-started/
+      icon: right-arrow
+    - text: 理解初始化模型
+      link: /inplace-init/zh-cn/concepts/initialization-model/
+      variant: minimal
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+`inplace-init` 是一个兼容 `no_std` 的 Rust 库，可在调用方提供的存储中直接构造值。初始化器既可以写入完整值，也可以逐字段构造结构体。初始化成功后会返回凭证，独占访问目标值并负责析构。
+
+普通值使用可移动初始化 API。如果构造过程依赖值的最终地址，例如自引用类型，则使用固定地址初始化 API。派生宏和初始化宏会生成字段投影及类型状态代码。
+
+<CardGrid stagger>
+	<Card title="从可运行示例开始" icon="rocket">
+		跟随[快速入门](/inplace-init/zh-cn/guide/getting-started/)，使用 `init!` 和 `init_in` 初始化结构体。
+	</Card>
+	<Card title="使用 derive 构造 builder" icon="pencil">
+		通过 [`#[derive(Init)]`](/inplace-init/zh-cn/guides/derive-builder/) 生成类型状态 builder 和字段默认值。
+	</Card>
+	<Card title="保持地址稳定" icon="setting">
+		了解何时使用 [`pin_init!` 与 `pin_init_local!`](/inplace-init/zh-cn/guides/pinning/)，以及 `#[pin]` 字段如何受到检查。
+	</Card>
+	<Card title="查阅 API" icon="open-book">
+		查看[宏语法](/inplace-init/zh-cn/reference/macros/)和[运行时 API](/inplace-init/zh-cn/reference/api/)。
+	</Card>
+</CardGrid>
+
+## 库提供的保证
+
+- `InitSlot` 表示一个独占且尚未初始化的目标位置。
+- 初始化成功后会返回 `InitReceipt`，由它承担目标值的析构责任。
+- 结构体初始化宏会把字段投影到最终目标位置；后续字段失败时，已经构造的字段会被清理。
+- 固定地址初始化使用单独的模式和凭证 API，使值能够在最终地址构造，并通过 `Pin` 访问。
+
+默认 feature 集兼容 `no_std`，且不启用分配器。启用 `alloc` 可使用 Box 初始化和基于分配的集合默认值；启用 `std` 可为 `HashMap` 与 `HashSet` 提供默认初始化。

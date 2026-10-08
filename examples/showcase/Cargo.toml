@@ -1,0 +1,10 @@
+[package]
+name = "inplace-init-showcase"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish = false
+readme = "README_CN.md"
+
+[dependencies]
+inplace-init = { path = "../../crates/inplace-init", features = ["alloc"] }
