@@ -14,3 +14,7 @@ homepage = "https://github.com/shaogme/inplace-init"
 documentation = "https://docs.rs/inplace-init"
 keywords = ["in-place", "initialization", "pinning", "no-std", "memory"]
 categories = ["memory-management", "no-std", "rust-patterns"]
+
+[workspace.dependencies]
+inplace-init = { path = "crates/inplace-init" }
+inplace-init-macros = { path = "crates/inplace-init-macros", version = "0.1.0" }

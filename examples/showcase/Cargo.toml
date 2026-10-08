@@ -7,4 +7,4 @@ publish = false
 readme = "README_CN.md"
 
 [dependencies]
-inplace-init = { path = "../../crates/inplace-init", features = ["alloc"] }
+inplace-init = { workspace = true, features = ["alloc"] }

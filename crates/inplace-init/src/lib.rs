@@ -1,8 +1,8 @@
 #![no_std]
 #![doc = concat!(
-    include_str!("../../../README.md"),
+    include_str!("../README.md"),
     "\n\n",
-    include_str!("../../../README_CN.md"),
+    include_str!("../README_CN.md"),
 )]
 
 use core::{mem::MaybeUninit, pin::Pin};
